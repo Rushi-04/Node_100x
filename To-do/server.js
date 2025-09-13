@@ -17,9 +17,8 @@
 // console.log(__dirname);
 // console.log(path.join(__dirname, "index.js", "../../starter-project", "index.js"))
 
-// cfreating a to-do backend
+// creating a to-do backend
 
-const e = require("express");
 const express = require("express");
 const app = express();
 
