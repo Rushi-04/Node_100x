@@ -23,7 +23,6 @@ const express = require("express");
 const app = express();
 
 
-
 // app.use(express.json); // --> to parse json bodies
 
 // get all the todos

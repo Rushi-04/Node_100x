@@ -1,4 +1,3 @@
-
 // Approach  1 : generating token and verifying it.
 
 // const express = require('express');
@@ -85,20 +84,21 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const JWT_SECRET = 'JaiShreeRamHarHarMahadev';
 const app = express();
-app.use(express.json());
+
+app.use(express.json()); // middleware
 
 
 
 let users = [];
 
-function generateToken() {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let token = '';
-    for (let i = 0; i < 21; i++) {
-        token += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return token;
-}
+// function generateToken() {
+//     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+//     let token = '';
+//     for (let i = 0; i < 21; i++) {
+//         token += chars.charAt(Math.floor(Math.random() * chars.length));
+//     }
+//     return token;
+// }
 
 app.post('/sign-up', function (req, res) {
     const username = req.body.username;
