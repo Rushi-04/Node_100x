@@ -3,30 +3,75 @@
 <head>
     <title>Document</title>
 </head>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js"></script>
 <body>
     <div>
         Sign-Up :
-        <input type="text" name="username" placeholder="Username">
-        <input type="text" name="password" placeholder="Password">
+        <input type="text" id="signup-username" name="username" placeholder="Username">
+        <input type="password" id="signup-password" name="password" placeholder="Password">
         <button onclick="signup()">Submit</button>
     </div>
     <br>
     <div>
         Sign-In :
-        <input type="text" name="username" placeholder="Username">
-        <input type="text" name="password" placeholder="Password">
+        <input type="text" id="signin-username" name="username" placeholder="Username">
+        <input type="password" id="signin-password" name="password" placeholder="Password">
         <button onclick="signin()">Submit</button>
     </div>
     <br>
     <div>
         User Information:
-        <div class="information">   </div>
+        <button onclick="getInfo()">Show Info</button>
+        <div id="information"></div>
     </div>
     <br>
     <div>
         <button onclick="logout()" >Logout</button>
     </div>
+
+<script>
+    const signup = async () => {
+        const username = document.getElementById("signup-username").value;
+        const password = document.getElementById("signup-password").value;
+
+        await axios.post("http://localhost:3000/sign-up", {
+            username: username,
+            password: password    
+        });
+        alert("Sign-Up Successful");
+    }
+
+
+    const signin = async () => {
+        const username = document.getElementById("signin-username").value;
+        const password = document.getElementById("signin-password").value;
+
+        const response = await axios.post("http://localhost:3000/sign-in", {
+            username: username,
+            password: password    
+        });
+        // stores the token in local storage
+        localStorage.setItem("token", response.data.token);
+        alert("Sign-In Successful");
+    }
+
+    const getInfo = async () => {
+        document.getElementById("information").innerHTML = "No Information Found";
+        const response = await axios.get("http://localhost:3000/me", {
+          headers : {
+            token : localStorage.getItem("token")
+          }  
+        })
+        document.getElementById("information").innerHTML = "Username: " + response.data.username + "<br>" + "Password: " + response.data.password;
+        console.log(response.data);
+    }
+    const logout = async () => {
+        localStorage.removeItem("token");
+        alert("Logout Successful")
+    }
+    
+
+</script>
 </body>
 
 </html>
