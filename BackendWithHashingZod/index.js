@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const JWT_SECRET = "LearningMongoDb";
 const { UserModel, TodoModel } = require('./db')
 const bcrypt = require('bcrypt');
+const { z } = require("zod");
 
 const app = express();
 app.use(express.json());
@@ -29,10 +30,29 @@ const auth = async (req, res, next) => {
 
 // non-authenticated routes
 app.post('/signup', async (req, res) => {
+
+    const requiredBody = z.object({
+        email: z.email(),
+        name: z.string().min(4).max(100),
+        password: z.string().min(4).max(30)
+    });
+
+    const parsedDataWithSuccess = requiredBody.safeParse(req.body);
+
+    if(!parsedDataWithSuccess.success)
+    {
+        res.json({
+            message: "Incorrect format",
+            error: parsedDataWithSuccess.error
+        })
+        return
+    }
+
+
     const email = req.body.email;
     const name = req.body.name;
     const password = req.body.password;
-
+    
     const errorThrown = false;
     try
     {
