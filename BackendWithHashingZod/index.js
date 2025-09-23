@@ -22,8 +22,8 @@ const auth = async (req, res, next) => {
     {
         req.userId = decodedInfo.id ;
         next();
-    }else{
-        res.status(403).json("Not Authenticated, Terminating Request...");
+    }else{ 
+        res.status(403).json({message: "Not Authenticated, Terminating Request..."});
     }
     
 }
