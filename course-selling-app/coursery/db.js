@@ -1,11 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.ObjectId;
-require("dotenv").config();
 
-const CONNECTION_STRING = process.env.CONNECTION_STRING;
-
-mongoose.connect(CONNECTION_STRING);
 
 const userSchema = new Schema({
     email: {type: String, unique: true},
@@ -37,7 +33,7 @@ const purchaseSchema = new Schema({
 const userModel = mongoose.model("users", userSchema);
 const adminModel = mongoose.model("admins", adminSchema);
 const courseModel = mongoose.model("courses", courseSchema);
-const purchaseModel = mongoose.model("courses", purchaseSchema);
+const purchaseModel = mongoose.model("purchases", purchaseSchema);
 
 module.exports = {
     userModel: userModel,

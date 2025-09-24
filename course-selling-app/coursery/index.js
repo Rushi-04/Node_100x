@@ -18,7 +18,10 @@ const express = require("express");
 const { userRouter } =  require("./user");
 const { courseRouter } = require("./course");
 const { adminRouter } = require("./admin");
+const mongoose = require("mongoose");
+require("dotenv").config();
 
+const CONNECTION_STRING = process.env.CONNECTION_STRING;
 
 const app = express();
 app.use(express.json());
@@ -27,6 +30,13 @@ app.use("/api/v1/user", userRouter);
 app.use("/api/v1/admin", adminRouter);
 app.use("/api/v1/course", courseRouter);
 
-app.listen(3000, () => {
-    console.log("Listening on port 3000...")
-});
+
+const main = async () => {
+
+    await mongoose.connect(CONNECTION_STRING);
+    app.listen(3000, () => {
+        console.log("Listening on port 3000...");
+    });
+}
+
+main();
