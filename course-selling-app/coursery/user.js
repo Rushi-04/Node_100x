@@ -2,59 +2,44 @@
 // const Router = express.Router;
 
 const { Router } =  require("express");
-const { UserModel } = require("./db");
-const JWT_SECRET = "CourseSellingApp";
+const { userModel, purchaseModel } = require("./db");
 const jwt = require("jsonwebtoken");
 const userRouter = Router();
 const bcrypt = require("bcrypt");
 const {z} = require("zod");
+require("dotenv").config();
+const JWT_USER_PASSWORD = process.env.JWT_USER_PASSWORD;
+const userAuth = require("./middlewares/user");
 
-
-
-const userAuth = async (req, res, next) => {
-    const token = req.headers.token;
-    const decodedInfo = jwt.verify(token, JWT_SECRET);
-
-    if(decodedInfo)
-    {  
-        req.userId = decodedInfo.id;
-        next();
-        
-    }else{
-        res.status(403).json({
-            message: "User Not Authenticated, Terminating Request..."
-        });
-    }
-}
 
 userRouter.post('/signup', async (req, res) => {
 
     const requiredBody = z.object({
         email: z.email(),
-        name: z.string().min(2).max(100),
+        firstName: z.string().min(2).max(100),
+        lastName: z.string().min(2).max(100),
         password: z.string().min(6).max(30)
     });
 
-    const parsedDataWithSuccess = requiredBody.safeParse(req.body);
+    const parsedData = requiredBody.safeParse(req.body);
 
-    if(!parsedDataWithSuccess.success)
+    if(!parsedData.success)
     {
         res.json({
             message: "Incorrect format",
-            error: parsedDataWithSuccess.error
+            error: parsedData.error
         })
         return
     }
-
-    const email = req.body.email;
-    const name = req.body.name;
-    const password = req.body.password;
+    
+    const {email, firstName, lastName, password} = req.body;
 
     const hashedPassword = await bcrypt.hash(password, 6)
 
-    await UserModel.create({
+    await userModel.create({
         email: email,
-        name: name,
+        firstName: firstName,
+        lastName: lastName,
         password: hashedPassword
     });
 
@@ -65,10 +50,9 @@ userRouter.post('/signup', async (req, res) => {
 });
 
 userRouter.post('/signin', async (req, res) => {
-    const email = req.body.email;
-    const password = req.body.password;
+    const {email, password} = req.body;
 
-    const user = await UserModel.findOne({
+    const user = await userModel.findOne({
         email: email
     });
 
@@ -77,7 +61,7 @@ userRouter.post('/signin', async (req, res) => {
     if(passwordMatched){
         const token = jwt.sign({
             id: user._id
-        }, JWT_SECRET);
+        }, JWT_USER_PASSWORD);
 
         res.json({
             token: token
@@ -91,19 +75,26 @@ userRouter.post('/signin', async (req, res) => {
 });
 
 
-userRouter.get('/purchases', userAuth, (req, res) => {
+userRouter.get('/purchases', userAuth, async (req, res) => {
+    const userId = req.userId;
+
+    const purchases = await purchaseModel.find({
+       userId: userId 
+    });
+
     return res.json({
-        message: "User Purchased Courses"
+        message: "User Purchased Courses",
+        purchases: purchases
     });
 });
 
 
 
-userRouter.get('/courses', userAuth, (req, res) => {
-    return res.json({
-        message: "All Courses"
-    });
-});
+// userRouter.get('/courses', userAuth, (req, res) => {
+//     return res.json({
+//         message: "All Courses"
+//     });
+// });
 
 
 module.exports = {
