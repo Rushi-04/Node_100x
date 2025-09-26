@@ -5,7 +5,8 @@ const JWT_USER_PASSWORD = process.env.JWT_USER_PASSWORD;
 
 const userAuth = async (req, res, next) => {
     try {
-        const token = req.headers.token;
+        // const token = req.headers.token;
+        const token = req.cookies.token;
         if(!token){
             res.status(403).json({
                 message: "Token Missing."

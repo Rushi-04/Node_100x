@@ -4,13 +4,14 @@
 const { Router } =  require("express");
 const { userModel, purchaseModel } = require("./db");
 const jwt = require("jsonwebtoken");
-const userRouter = Router();
 const bcrypt = require("bcrypt");
 const {z} = require("zod");
 require("dotenv").config();
 const JWT_USER_PASSWORD = process.env.JWT_USER_PASSWORD;
 const {userAuth} = require("./middlewares/user");
 
+
+const userRouter = Router();
 
 userRouter.post('/signup', async (req, res) => {
 
@@ -59,12 +60,16 @@ userRouter.post('/signin', async (req, res) => {
     const passwordMatched = await bcrypt.compare(password, user.password);
 
     if(passwordMatched){
-        const token = jwt.sign({
-            id: user._id
-        }, JWT_USER_PASSWORD);
+        const token = jwt.sign({ id: user._id }, JWT_USER_PASSWORD, { expiresIn: "1h" });
+
+        res.cookie("token", token, {
+            httpOnly: true,  // cannot be accessed by JS (helps prevent XSS)
+            // secure: true,    // send only over HTTPS (disable for localhost if needed)
+            // sameSite: "strict" // CSRF protection
+        })
 
         res.json({
-            token: token
+            message: "Login Successful"
         });
     }else{
         res.status(403).json({
@@ -88,7 +93,12 @@ userRouter.get('/purchases', userAuth, async (req, res) => {
     });
 });
 
-
+userRouter.post("/logout", (req, res) => {
+    res.clearCookie("token");
+    res.json({
+        message: "Logged Out Successfully"
+    });
+})
 
 // userRouter.get('/courses', userAuth, (req, res) => {
 //     return res.json({

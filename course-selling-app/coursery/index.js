@@ -11,24 +11,32 @@
 // — Add a database (mongodb), use dotenv to store the database connection string ✅
 // — Define the schema for User, Admin, Course, Purchase 
 // — Complete the routes for user login, signup, purchase a course, see course (Extra points - Use express routing to better structure
-//  your routes) 
-// — Create the frontend 
+//  your routes) ✅
+// — Create the frontend ❌
 
 const express = require("express");
 const { userRouter } =  require("./user");
 const { courseRouter } = require("./course");
 const { adminRouter } = require("./admin");
 const mongoose = require("mongoose");
+const cookieParser = require("cookie-parser");
 require("dotenv").config();
+const cors = require("cors");
 
 const CONNECTION_STRING = process.env.CONNECTION_STRING;
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/admin", adminRouter);
 app.use("/api/v1/course", courseRouter);
+
+app.use(cors({
+    // origin: ,
+    credentials: true
+}));
 
 
 const main = async () => {
