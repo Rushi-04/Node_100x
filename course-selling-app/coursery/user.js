@@ -9,7 +9,7 @@ const bcrypt = require("bcrypt");
 const {z} = require("zod");
 require("dotenv").config();
 const JWT_USER_PASSWORD = process.env.JWT_USER_PASSWORD;
-const userAuth = require("./middlewares/user");
+const {userAuth} = require("./middlewares/user");
 
 
 userRouter.post('/signup', async (req, res) => {
@@ -56,7 +56,7 @@ userRouter.post('/signin', async (req, res) => {
         email: email
     });
 
-    const passwordMatched = bcrypt.compare(password, user.password);
+    const passwordMatched = await bcrypt.compare(password, user.password);
 
     if(passwordMatched){
         const token = jwt.sign({

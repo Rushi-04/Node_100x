@@ -3,7 +3,7 @@ const { adminModel, courseModel } = require("./db");
 const adminRouter = Router();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const {z} = require("zod");
+const {z, readonly} = require("zod");
 const { adminAuth } = require("./middlewares/admin");
 require("dotenv").config();
 const JWT_ADMIN_PASSWORD = process.env.JWT_ADMIN_PASSWORD
@@ -57,7 +57,7 @@ adminRouter.post('/signin', async (req, res) => {
         email: email
     });
 
-    const passwordMatched = bcrypt.compare(password, admin.password);
+    const passwordMatched = await bcrypt.compare(password, admin.password);
 
     if(passwordMatched){
         const token = jwt.sign({
@@ -111,6 +111,11 @@ adminRouter.put("/course", adminAuth, async (req, res) => {
         price: price, 
         imageUrl: imageUrl
     });
+
+    if(!course)
+    {
+        res.status(404).json({message: "Course Not Found or unauthorized"})
+    }
 
     res.json({
         message: "Course Updated",

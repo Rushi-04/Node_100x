@@ -4,19 +4,23 @@ const JWT_ADMIN_PASSWORD = process.env.JWT_ADMIN_PASSWORD;
 
 
 const adminAuth = async (req, res, next) => {
-    const token = req.headers.token;
-    const decodedInfo = jwt.verify(token, JWT_ADMIN_PASSWORD);
-    
-    if(decodedInfo)
+    try{
+        const token = req.headers.token;
+        if(!token)
         {
-            req.adminId = decodedInfo.id;
-            console.log("Here in admin auth")
+            res.status(401).json({
+                message: "Token Mising"
+            });
+        }
+        const decodedInfo = jwt.verify(token, JWT_ADMIN_PASSWORD);
+    
+        req.adminId = decodedInfo.id;
         next();
-    }else{
+    }catch (err) {
         res.status(403).json({
-            message: "Admin Not Authenticated, Terminating Request..."
+            message: "Admin Not Authenticated."
         });
-    }
+    }     
 }
 
 module.exports = {

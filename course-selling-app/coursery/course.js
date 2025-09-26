@@ -1,9 +1,7 @@
 const {Router} = require("express");
-const jwt = require("jsonwebtoken");
 const courseRouter = Router();
 require("dotenv").config();
-const userAuth = require("./middlewares/user");
-const adminAuth = require("./middlewares/admin");
+const {userAuth} = require("./middlewares/user");
 const { purchaseModel, courseModel } = require("./db");
 
 
