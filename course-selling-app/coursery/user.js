@@ -31,7 +31,7 @@ userRouter.post('/signup', async (req, res) => {
             error: parsedData.error
         })
         return
-    }
+    }  
     
     const {email, firstName, lastName, password} = req.body;
 
