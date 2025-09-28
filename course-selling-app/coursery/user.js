@@ -27,7 +27,7 @@ userRouter.post('/signup', async (req, res) => {
     if(!parsedData.success)
     {
         res.json({
-            message: "Incorrect format",
+            message: "Incorrect format", 
             error: parsedData.error
         })
         return
@@ -35,7 +35,7 @@ userRouter.post('/signup', async (req, res) => {
     
     const {email, firstName, lastName, password} = req.body;
 
-    const hashedPassword = await bcrypt.hash(password, 6)
+    const hashedPassword = await bcrypt.hash(password, 6)  
 
     await userModel.create({
         email: email,
