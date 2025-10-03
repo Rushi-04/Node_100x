@@ -301,8 +301,8 @@ export default function App(){
   const [name, setName] = useState('');
   const renderCount = useRef(0);
   const inputRef = useRef(null);
-  const prevName = useRef('');
-  // {current: 0}
+  const prevName = useRef(''); 
+  // {current: 0} 
 
   useEffect(() => {
     renderCount.current = renderCount.current + 1;
@@ -314,7 +314,7 @@ export default function App(){
 
   useEffect(() => { 
     prevName.current = name
-  }, [name]);
+  }, [name]);  
 
   return (
     <>

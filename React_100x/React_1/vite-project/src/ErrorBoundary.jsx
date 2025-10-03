@@ -6,6 +6,7 @@ class ErrorBoundary extends Component {
     this.state = { hasError: false };
   }
 
+  
   // Lifecycle method that catches errors
   static getDerivedStateFromError(error) {
     return { hasError: true };
@@ -15,6 +16,7 @@ class ErrorBoundary extends Component {
   componentDidCatch(error, errorInfo) {
     console.log("Error caught by ErrorBoundary:", error, errorInfo);
   }
+
 
   render() {
     if (this.state.hasError) {
