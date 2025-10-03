@@ -23,35 +23,35 @@
 // {
 //   throw new Error("Error happened rushi")
 //   const [count, setCount] = useState(0)
-  
+
 //   useEffect(() => {
-    
+
 //     // runs when component mounts
 //     console.log("Hello from useEffect");
-    
+
 //     // runs when component unmounts
 //     return function() {
 //       // clearInterval(clock);
 //     }
 //   }, []) // dependency array, cleanup, fetch inside use
 
-  
+
 //   const IncreaseCount = () => {
 //     setCount(count + 1);
 //   }
-  
+
 //   const DecreaseCount = () => {
 //     setCount(count - 1);
 //   }
-  
+
 //   const ResetCount = () => {
 //     setCount(0);
 //   }
-  
+
 //   // setInterval(
 //     //   IncreaseCount
 //     // , 1000);
-    
+
 //     // Conditional Rendering
 //     const isVisibble = true ;
 //     const first = props.first
@@ -78,7 +78,7 @@
 // function Counters(props)
 // {
 //   const [count, setCount] = useState(0)
-  
+
 //   useEffect(() => {
 
 //     // runs when component mounts
@@ -293,15 +293,29 @@
 // 2. Access DOM Nodes
 // 3. Tracking prev values
 
-import { useEffect } from "react";
-import { useRef, useState } from "react"; 
+import { createContext, useEffect } from "react";
+import { useRef, useState, useContext } from "react";
+const UserContext = createContext();
 
-export default function App(){
+
+function UserProvider({ children }) {
+  const [naav, setNaav] = useState('Rushi');
+
+  return (
+    <UserContext.Provider value={{
+      naav: naav
+    }}>
+      {children}
+    </UserContext.Provider>
+  )
+}
+
+export default function App() {
 
   const [name, setName] = useState('');
   const renderCount = useRef(0);
   const inputRef = useRef(null);
-  const prevName = useRef(''); 
+  const prevName = useRef('');
   // {current: 0} 
 
   useEffect(() => {
@@ -312,17 +326,53 @@ export default function App(){
     inputRef.current.focus(); // inputRef.current --> <input value>
   }
 
-  useEffect(() => { 
+  useEffect(() => {
     prevName.current = name
-  }, [name]);  
+  }, [name]);
+
+
 
   return (
     <>
-    <h2>Dev-100x</h2>
-    <input ref={inputRef} type="text" placeholder="Name" onChange={e => setName(e.target.value)} />
-    <h1>Hello my name is {name} | It used to be {prevName.current}</h1>
-    <h1>This page is rendered {renderCount.current} time.</h1>
-    <button onClick={focusHandler}>Focus Input Box</button>
+      <h2>Dev-100x</h2>
+      <input ref={inputRef} type="text" placeholder="Name" onChange={e => setName(e.target.value)} />
+      <h1>Hello my name is {name} | It used to be {prevName.current}</h1>
+      <h1>This page is rendered {renderCount.current} time.</h1>
+      <button onClick={focusHandler}>Focus Input Box</button>
+      <h1>----------------------------------------------</h1>
+
+      <UserProvider>
+        <Dashboard />
+      </UserProvider>
+    </>
+
+  )
+}
+
+
+
+function Dashboard() {
+  return (
+    <>
+      <h1>Dashboard Here</h1>
+      <Home />
+    </>
+  )
+}
+
+function Home() {
+  const { naav } = useContext(UserContext);
+  return (
+    <>
+      <h1>Home Here: {naav}</h1>
+    </>
+  )
+}
+
+function Intro() {
+  return (
+    <>
+      <h1>Intro Here</h1>
     </>
   )
 }
