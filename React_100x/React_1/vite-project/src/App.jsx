@@ -290,90 +290,305 @@
 // ---------------------------------- useRef ------------------------------
 
 // 1. It persists values/data across re-renders --> count renders
-// 2. Access DOM Nodes
+// 2. Access DOM Nodes ( Most Common Use )
 // 3. Tracking prev values
 
-import { createContext, useEffect } from "react";
-import { useRef, useState, useContext } from "react";
-const UserContext = createContext();
+// import { createContext, useEffect } from "react";
+// import { useRef, useState, useContext } from "react";
+// const UserContext = createContext();
 
 
-function UserProvider({ children }) {
-  const [naav, setNaav] = useState('Rushi');
+// function UserProvider({ children }) {
+//   const [naav, setNaav] = useState('Rushi');
 
-  return (
-    <UserContext.Provider value={{
-      naav: naav
-    }}>
-      {children}
-    </UserContext.Provider>
-  )
-}
+//   return (
+//     <UserContext.Provider value={{
+//       naav: naav
+//     }}>
+//       {children}
+//     </UserContext.Provider>
+//   )
+// }
+
+
+// export default function App() {
+
+//   const [name, setName] = useState('');
+//   const renderCount = useRef(0);
+//   const inputRef = useRef(null);
+//   const prevName = useRef('');
+//   // {current: 0} 
+
+//   useEffect(() => {
+//     renderCount.current = renderCount.current + 1;
+//   })
+
+//   const focusHandler = () => {
+//     inputRef.current.focus(); // inputRef.current --> <input value>
+//   }
+
+//   useEffect(() => {
+//     prevName.current = name
+//   }, [name]);
+
+
+
+//   return (
+//     <>
+//       <h2>Dev-100x</h2>
+//       <input ref={inputRef} type="text" placeholder="Name" onChange={e => setName(e.target.value)} />
+//       <h1>Hello my name is {name} | It used to be {prevName.current}</h1>
+//       <h1>This page is rendered {renderCount.current} time.</h1>
+//       <button onClick={focusHandler}>Focus Input Box</button>
+//       <h1>----------------------------------------------</h1>
+
+//       <UserProvider>
+//         <Dashboard />
+//       </UserProvider>
+//     </>
+
+//   )
+// }
+
+
+
+// function Dashboard() {
+//   return (
+//     <>
+//       <h1>Dashboard Here</h1>
+//       <Home />
+//     </>
+//   )
+// }
+
+// function Home() {
+//   const { naav } = useContext(UserContext);
+//   return (
+//     <>
+//       <h1>Home Here: {naav}</h1>
+//     </>
+//   )
+// }
+
+// function Intro() {
+//   return (
+//     <>
+//       <h1>Intro Here</h1>
+//     </>
+//   )
+// }
+
+///// Coustom Hooks - A custom hook should start with use , should use another hook under the hood and return something / states / values
+
+// import { useState } from "react"
+
+
+// function useCounter() {
+//   const [count, setCount] = useState(0);
+  
+//   const IncreaseCount = () => {
+//     // setCount(count+1);
+//     setCount(count => count + 1);
+//   }
+//   return{
+//     count: count,
+//     IncreaseCount: IncreaseCount
+//   }
+// }
+
+// function Counter() {
+  
+//   const {count, IncreaseCount} = useCounter();
+//   return (
+//     <>
+//     <h1>Hello from App</h1>
+//     <h2>Count: {count}</h2>
+//     <button onClick={IncreaseCount} >Increase</button>
+//     </>
+//   )
+
+// }
+
+// export default function App() {
+
+//   return (
+//     <>
+//     <Counter/>
+//     <Counter/>
+//     </>
+//   )
+// }
+
+// 1. useFetch, usePrev, useDebounce Hook
+
+// import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
+// import {useDebounce, useFetch, usePost1, usePrev} from "./Hooks/useFetch";
+
+// export default function App () {
+//   const [count, setCount] = useState(0);
+//   const prev = usePrev(count);
+//   // const post = usePost1();
+//   const post = useFetch("https://jsonplaceholder.typicode.com/posts/1");
+
+//   const [value, setValue] = useState();
+//   const debouncedValue = useDebounce(value, 700);
+
+
+//   useEffect(() => {
+//     // Exprensive Operation
+//     console.log("Expensive Operation.")
+//   }, [debouncedValue]);
+
+//   return (
+//     <>
+//     <h1>Hello from App: {debouncedValue}</h1>
+//     <br />
+//     <h1>User Id</h1>  
+//     <h2>{post.userId}</h2>
+
+//     <h1>Title</h1>
+//     <h2>{post.title}</h2>
+
+//     <h1>Body</h1>
+//     <h2>{post.body}</h2>
+//     <br />
+//     <h3>Count: {count}, PrevCount: {prev}</h3>
+//     <button onClick={() => setCount(curr => curr + 1)}>Click Me!</button>
+//     <br />
+//     ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+//     <div>
+//       <h1>Search </h1>
+//       <span>See useDebounce in Action: </span>
+//       <input onChange={(e) => setValue(e.target.value)} type="text" placeholder="Search here... See in Console" style={{width: "200px"}}/>
+      
+//     </div>
+//     </>
+//   )
+// }
+
+
+// Recoil for State Management
+
+// 1. Creating a simple counter app with useState Only
+
+// import {useState} from "react";
+
+// export default function App() {
+
+//   const [count, setCount] = useState(0);
+
+//   return <>
+//   <div>
+//     <button onClick={() => setCount(coumnt => count + 1)} >Increase</button> --- <button onClick={() => setCount(coumnt => count - 1)} >Decrease</button>
+//   </div>
+//   <h1>Counter: {count}</h1>
+//   </>
+// }
+
+
+// 2. Creating a simple counter app with Context API
+
+// import {useState, useContext, createContext} from "react";
+
+// const CounterContext = createContext();
+
+// function CounterProvider({children}){
+//   const [count, setCount] = useState(0);
+
+//   return <CounterContext.Provider value={{count, setCount}}>
+//     {children}
+//   </CounterContext.Provider>
+
+// }
+
+// export default function App() {
+
+//   return <>
+//   <br />
+//   <CounterProvider>
+//     <Counter/>
+//   </CounterProvider>
+//   </>
+// }
+
+// function IncreaseCount(){
+//   const {count, setCount} = useContext(CounterContext);
+//   return <button onClick={() => setCount(count => count + 1)} >Increase</button>
+// }
+
+// function DecreaseCount(){
+//   const {count, setCount} = useContext(CounterContext);
+//   return <>
+//     <button onClick={() => setCount(count => count - 1)} >Decrease</button>
+//   </>
+// }
+
+// function Counter(){
+//   const {count} = useContext(CounterContext);
+
+//   return <>
+//     <IncreaseCount/> =
+//       = <DecreaseCount/>
+//     <h2>Counter: {count}</h2>
+//   </>
+// }
+
+// 3. Creating a simple counter app with Recoil
+
+import { RecoilRoot, useRecoilValue, useSetRecoilState } from "recoil";
+import { counterAtom, evenSelector } from "./Store/atoms/counter";
 
 export default function App() {
 
-  const [name, setName] = useState('');
-  const renderCount = useRef(0);
-  const inputRef = useRef(null);
-  const prevName = useRef('');
-  // {current: 0} 
-
-  useEffect(() => {
-    renderCount.current = renderCount.current + 1;
-  })
-
-  const focusHandler = () => {
-    inputRef.current.focus(); // inputRef.current --> <input value>
-  }
-
-  useEffect(() => {
-    prevName.current = name
-  }, [name]);
-
-
-
   return (
-    <>
-      <h2>Dev-100x</h2>
-      <input ref={inputRef} type="text" placeholder="Name" onChange={e => setName(e.target.value)} />
-      <h1>Hello my name is {name} | It used to be {prevName.current}</h1>
-      <h1>This page is rendered {renderCount.current} time.</h1>
-      <button onClick={focusHandler}>Focus Input Box</button>
-      <h1>----------------------------------------------</h1>
-
-      <UserProvider>
-        <Dashboard />
-      </UserProvider>
-    </>
-
+  <RecoilRoot>
+    <MainCounter/>
+  </RecoilRoot>
   )
 }
 
-
-
-function Dashboard() {
+function IncreaseCount(){
+  const setCount = useSetRecoilState(counterAtom);
   return (
-    <>
-      <h1>Dashboard Here</h1>
-      <Home />
-    </>
+  <button onClick={() => setCount(count => count + 2)} >Increase</button>
+  );
+}
+
+function DecreaseCount(){
+  const setCount = useSetRecoilState(counterAtom);
+  return (
+    <button onClick={() => setCount(count => count - 1)} >Decrease</button>
+  );
+}
+
+function MainCounter(){
+ 
+
+  return (
+  <>
+    <IncreaseCount/> =
+      = <DecreaseCount/>
+    <Counter/>
+    <IsEven/>
+  </>
   )
 }
 
-function Home() {
-  const { naav } = useContext(UserContext);
+function Counter(){
+  const count = useRecoilValue(counterAtom);
   return (
-    <>
-      <h1>Home Here: {naav}</h1>
-    </>
+    <h2>Counter: {count}</h2>
   )
 }
 
-function Intro() {
+function IsEven(){
+  const even = useRecoilValue(evenSelector);
+  console.log(even)
   return (
-    <>
-      <h1>Intro Here</h1>
-    </>
+  <div>
+    {even? "Even": "Odd"}
+  </div>
   )
 }
-
