@@ -635,8 +635,8 @@
 // AtomFamily 
 
 // Counter 
-import { RecoilRoot, useRecoilValue, useRecoilState, useSetRecoilState } from "recoil";
-import { counterAtomFamily, todoAtomFamily } from "./Store/atoms/atmFamily";
+import { RecoilRoot, useRecoilValue, useRecoilState, useSetRecoilState, useRecoilValueLoadable } from "recoil";
+import { counterAtomFamily, todoAtomFamily } from "./Store/atoms/at0mFamily";
 
 export default function App() {
 
@@ -649,7 +649,9 @@ export default function App() {
       <TodoItem id={1}/>
       <TodoItem id={1}/>
       <TodoItem id={2}/>
-
+      {/* <UserStatus id={1}/> */}
+      <TodoStatus id={1}/>
+      <TodoStatus id={21}/>
     </RecoilRoot>
   )
 }
@@ -713,3 +715,50 @@ function TodoItem({ id }) {
     </div>
   );
 }
+
+// Selector Family
+
+// import { userAtomFamily, isUserAdult  } from "./Store/atoms/seletarFamily";
+import { todoAtomFamily1  } from "./Store/atoms/seletarFamily";
+
+// const UserStatus = ({id}) => {
+//   const isAdult = useRecoilValue(isUserAdult(id)) 
+//   console.log(isAdult)
+//   return (
+//   <>
+//     <span>{isAdult ? "Adult":"Minor"} </span>
+//   </>
+//   )
+// }
+
+const TodoStatus = ({id}) => {
+  const todo = useRecoilValueLoadable(todoAtomFamily1(id)) 
+  // console.log(todo.contents + " 1")
+  // console.log(todo.state + " 2")
+  
+  if(todo.state == "loading"){
+    return (
+      <>
+      <span>Loading...</span>
+      </>
+    )
+  }else if(todo.state == "hasError" ){
+    return (
+      <>
+      <span>Error Occured please try again...</span>
+      </>
+    )
+  }else if(todo.state == "hasValue" ){
+    const data = todo.contents.todo
+    console.log(data)
+    return (
+      <>
+        {data && <div> <h2>{data.id}</h2> <h2>{data.title}</h2> <h2>{data.description}</h2> <h2>{data.completed}</h2></div>}
+      </>
+    )
+  }
+
+}
+
+
+
