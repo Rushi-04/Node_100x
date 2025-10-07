@@ -537,58 +537,93 @@
 
 // 3. Creating a simple counter app with Recoil
 
-import { RecoilRoot, useRecoilValue, useSetRecoilState } from "recoil";
-import { counterAtom, evenSelector } from "./Store/atoms/counter";
+// import { RecoilRoot, useRecoilValue, useSetRecoilState } from "recoil";
+// import { counterAtom, evenSelector } from "./Store/atoms/counter";
 
-export default function App() {
+// export default function App() {
 
-  return (
-  <RecoilRoot>
-    <MainCounter/>
-  </RecoilRoot>
-  )
-}
+//   return (
+//   <RecoilRoot>
+//     <MainCounter/>
+//   </RecoilRoot>
+//   )
+// }
 
-function IncreaseCount(){
-  const setCount = useSetRecoilState(counterAtom);
-  return (
-  <button onClick={() => setCount(count => count + 2)} >Increase</button>
-  );
-}
+// function IncreaseCount(){
+//   const setCount = useSetRecoilState(counterAtom);
+//   return (
+//   <button onClick={() => setCount(count => count + 2)} >Increase</button>
+//   );
+// }
 
-function DecreaseCount(){
-  const setCount = useSetRecoilState(counterAtom);
-  return (
-    <button onClick={() => setCount(count => count - 1)} >Decrease</button>
-  );
-}
+// function DecreaseCount(){
+//   const setCount = useSetRecoilState(counterAtom);
+//   return (
+//     <button onClick={() => setCount(count => count - 1)} >Decrease</button>
+//   );
+// }
 
-function MainCounter(){
+// function MainCounter(){
  
 
+//   return (
+//   <>
+//     <IncreaseCount/> =
+//       = <DecreaseCount/>
+//     <Counter/>
+//     <IsEven/>
+//   </>
+//   )
+// }
+
+// function Counter(){
+//   const count = useRecoilValue(counterAtom);
+//   return (
+//     <h2>Counter: {count}</h2>
+//   )
+// }
+
+// function IsEven(){
+//   const even = useRecoilValue(evenSelector);
+//   console.log(even)
+//   return (
+//   <div>
+//     {even? "Even": "Odd"}
+//   </div>
+//   )
+// }
+
+
+// Recoil Deep Dive
+
+import { RecoilRoot, useRecoilValue } from "recoil"
+import { AllNotifications, notificationAtom } from "./Store/atoms/notifications";
+
+export default function App(){
+
   return (
-  <>
-    <IncreaseCount/> =
-      = <DecreaseCount/>
-    <Counter/>
-    <IsEven/>
-  </>
+    <RecoilRoot>
+      <MainApp/>
+    </RecoilRoot>
   )
 }
 
-function Counter(){
-  const count = useRecoilValue(counterAtom);
-  return (
-    <h2>Counter: {count}</h2>
-  )
-}
 
-function IsEven(){
-  const even = useRecoilValue(evenSelector);
-  console.log(even)
+export const MainApp = () => {
+
+  const notification = useRecoilValue(notificationAtom);
+  const allNotification = useRecoilValue(AllNotifications);
+  console.log(notification)
+
+
   return (
-  <div>
-    {even? "Even": "Odd"}
-  </div>
+    <>
+      <button>Home</button>-
+      <button>My Network ({notification.network})</button>-
+      <button>Jobs ({notification.jobs})</button>-
+      <button>Messaging ({notification.messaging})</button>-
+      <button>Notifications ({notification.notifications})</button>-
+      <button>Me: ({allNotification})</button>
+    </>
   )
 }
