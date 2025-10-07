@@ -16,4 +16,3 @@ export const evenSelector = selector({
         return isEven;
     }
 })
-

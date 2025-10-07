@@ -596,34 +596,121 @@
 
 // Recoil Deep Dive
 
-import { RecoilRoot, useRecoilValue } from "recoil"
-import { AllNotifications, notificationAtom } from "./Store/atoms/notifications";
 
-export default function App(){
+// Atoms and Selectors
+
+// import { RecoilRoot, useRecoilValue } from "recoil"
+// import { AllNotifications, notificationAtom } from "./Store/atoms/notifications";
+
+// export default function App(){
+
+//   return (
+//     <RecoilRoot>
+//       <MainApp/>
+//     </RecoilRoot>
+//   )
+// }
+
+
+// export const MainApp = () => {
+
+//   const notification = useRecoilValue(notificationAtom);
+//   const allNotification = useRecoilValue(AllNotifications);
+//   console.log(notification)
+
+
+//   return (
+//     <>
+//       <button>Home</button>-
+//       <button>My Network ({notification.network})</button>-
+//       <button>Jobs ({notification.jobs})</button>-
+//       <button>Messaging ({notification.messaging})</button>-
+//       <button>Notifications ({notification.notifications})</button>-
+//       <button>Me: ({allNotification})</button>
+//     </>
+//   )
+// }
+
+
+// AtomFamily 
+
+// Counter 
+import { RecoilRoot, useRecoilValue, useRecoilState, useSetRecoilState } from "recoil";
+import { counterAtomFamily, todoAtomFamily } from "./Store/atoms/atmFamily";
+
+export default function App() {
 
   return (
     <RecoilRoot>
-      <MainApp/>
+      <Counter id={1}/>
+      <Counter id={1}/>
+      <Counter id={2}/>
+      <Counter id={3}/>
+      <TodoItem id={1}/>
+      <TodoItem id={1}/>
+      <TodoItem id={2}/>
+
     </RecoilRoot>
   )
 }
 
 
-export const MainApp = () => {
 
-  const notification = useRecoilValue(notificationAtom);
-  const allNotification = useRecoilValue(AllNotifications);
-  console.log(notification)
-
+const Counter = ({id}) => {
 
   return (
     <>
-      <button>Home</button>-
-      <button>My Network ({notification.network})</button>-
-      <button>Jobs ({notification.jobs})</button>-
-      <button>Messaging ({notification.messaging})</button>-
-      <button>Notifications ({notification.notifications})</button>-
-      <button>Me: ({allNotification})</button>
+      <ShowCount id={id}/>
+      <Increase id={id}/>
+      <Decrease id={id}/>
     </>
   )
+}
+
+const ShowCount = ({id}) => {
+  const count = useRecoilValue(counterAtomFamily(id));
+  return (
+    <>
+      <h1>Counter: {count}</h1>
+    </>
+  )
+}
+
+const Increase = ({id}) => {
+  const setCount = useSetRecoilState(counterAtomFamily(id));
+  return (
+    <>
+      <button onClick={() => {setCount(c => c + 1)}} >Increase +</button>
+    </>
+  )
+}
+
+const Decrease = ({id}) => {
+  const setCount = useSetRecoilState(counterAtomFamily(id));
+  return (
+    <>
+      <button onClick={() => {setCount(c => c - 1)}} >Decrease -</button>
+    </>
+  )
+}
+
+
+function TodoItem({ id }) {
+  const [todo, setTodo] = useRecoilState(todoAtomFamily(id));
+
+  return (
+    <div>
+      <input
+        type="text"
+        value={todo.title}
+        onChange={(e) => setTodo({ ...todo, title: e.target.value })}
+      />
+      <input
+        type="checkbox"
+        checked={todo.completed}
+        onChange={(e) => setTodo({ ...todo, completed: e.target.checked })}
+      />
+      <span>{todo.completed ? "✅ Done" : "⏳ Pending"}</span>
+    </div>
+  );
 }
