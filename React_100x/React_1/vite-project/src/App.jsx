@@ -655,7 +655,6 @@ export default function App() {
 }
 
 
-
 const Counter = ({id}) => {
 
   return (
@@ -710,7 +709,7 @@ function TodoItem({ id }) {
         checked={todo.completed}
         onChange={(e) => setTodo({ ...todo, completed: e.target.checked })}
       />
-      <span>{todo.completed ? "✅ Done" : "⏳ Pending"}</span>
+      <span>{todo.completed ? "Done" : "Pending"}</span>
     </div>
   );
 }
