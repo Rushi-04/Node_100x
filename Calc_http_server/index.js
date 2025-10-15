@@ -28,7 +28,7 @@
 
 // // creating 4 routes add, sub, mul, div
 // //1. ADD
-// app.get('/add',requestCouter , (req, res) => {        // using query 
+// app.get('/add',requestCouter , (req, res) => {        // using query   // Example URL: /add?a=21&b=11
 //     // requestCouter(req, res);
 //     const a = req.query.a;
 //     const b = req.query.b;
@@ -79,6 +79,7 @@
 
 const express = require('express');
 const app = express();
+const cors = require("cors");
 
 // how to use cors --> const cors = require('cors') ==> app.use(cors()) -- to allow all or app.use(cors({domains: ['https://google.com']}))
 
@@ -92,6 +93,7 @@ const middleman = (req, res, next) => {
 }
 
 app.use(middleman);
+app.use(cors())
 
 const realRequestHandler = (req, res) => {
     console.log('Hello from Request Handler.');
@@ -99,6 +101,29 @@ const realRequestHandler = (req, res) => {
 }
 
 app.get('/', realRequestHandler);
+
+app.get('/api/v1/notifications', (req, res) => {
+    console.log("Notifications Requested.")
+    res.status(200).json({
+        "network": 7,
+        "jobs": 8,
+        "messaging": 4,
+        "notifications": 5 
+    })
+})
+
+app.get('/api/v1/todos', (req, res) => {
+    console.log("Todos Requested.")
+    const id = req.query.id;
+    res.status(200).json({
+        "todo": {
+            "id": id,
+            "title": `Todo ${id}`,
+            "description": `This is Todo ${id}`,
+            "completed": false
+        }
+    })
+})
 
 app.listen(3000, () => {
     console.log('Listening on port 3000...');

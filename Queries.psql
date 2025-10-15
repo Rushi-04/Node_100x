@@ -1,0 +1,312 @@
+--> Practical 2 — DDL (Data Definition Language)
+-- create db
+CREATE DATABASE college_db;
+
+-- create table
+CREATE TABLE students(
+	student_id INT PRIMARY KEY,
+	name VARCHAR(50) NOT NULL,
+	branch VARCHAR(50) NOT NULL,
+	dob DATE,
+	email VARCHAR(100)	
+);
+
+SELECT * FROM students;
+
+-- alter table
+
+ALTER TABLE students
+ADD phone VARCHAR(15);
+
+ALTER TABLE students
+ALTER COLUMN name TYPE VARCHAR(100);
+
+ALTER TABLE students
+DROP COLUMN phone;
+
+ALTER TABLE students RENAME TO student_master;
+ALTER TABLE student_master RENAME TO students;
+
+TRUNCATE TABLE students;
+
+-- DELETE FROM students WHERE id = 1;
+
+DROP TABLE students;
+-----------------------------------------------------------------------------------------------
+--> Practical 3: Study of DML Commands in SQL
+-- e.g
+
+-- INSERT
+
+CREATE TABLE departments (
+  dept_id INT PRIMARY KEY,
+  dept_name VARCHAR(100) NOT NULL
+);
+
+INSERT INTO departments (dept_id, dept_name)
+VALUES (1, 'I.T');
+
+INSERT INTO departments (dept_id, dept_name)
+VALUES
+(2, 'Mechanical'),
+(3, 'Electrical'),
+(4, 'Electronics');
+
+-- UPDATE
+
+UPDATE departments
+SET dept_name = 'Civil';
+
+UPDATE departments
+SET dept_name = 'Civil'
+WHERE dept_id = 4;
+
+-- DELETE
+
+DELETE FROM departments
+WHERE dept_id = 4;
+
+DELETE FROM departments;
+
+SELECT * FROM departments;
+-----------------------------------------------------------------------------------------------
+
+--> Practical 4: To Write SQL SELECT Statements
+
+CREATE TABLE students(
+	student_id INT PRIMARY KEY,
+	name VARCHAR(50) NOT NULL,
+	branch VARCHAR(50) NOT NULL,
+	dob DATE,
+	email VARCHAR(100)	
+);
+
+SELECT * FROM students;
+
+INSERT INTO students(student_id, name, branch, dob, email) 
+VALUES
+(1, 'Rushikesh', 'I.T', '2025-01-01' , 'test1@gmail.com'),
+(2, 'Yash', 'C.S.E', '2025-01-01' , 'test2@gmail.com'),
+(3, 'Rushikesh', 'I.T', '2025-01-01' , 'test1@gmail.com')
+;
+-- TRUNCATE TABLE students;
+
+SELECT * FROM students;
+
+SELECT name, branch FROM students;
+
+SELECT 
+	name as n,
+	branch as b,
+	email as e
+FROM students;
+
+SELECT 
+	student_id as s,
+	name as n,
+	branch as b,
+	email as e,
+	student_id + 1 as "id + 1"
+FROM students;
+
+SELECT DISTINCT name FROM students;
+
+SELECT * FROM students
+WHERE student_id < 3;
+
+SELECT * FROM students
+ORDER BY student_id DESC;
+
+SELECT * FROM students
+LIMIT 2;
+-----------------------------------------------------------------------------------------------
+
+--> Practical 5: To display data from multiple tables (JOINS)
+
+-- Inner Join
+SELECT
+  s.student_id,
+  s.name,
+  d.dept_name,
+  s.branch
+FROM students s
+INNER JOIN departments d
+ON s.dept_id = d.dept_id;
+
+-- UPDATE students
+-- SET dept_id = 3
+-- WHERE student_id = 3;
+
+-- Left Outer Join
+
+SELECT
+  s.student_id,
+  s.name,
+  d.dept_name
+FROM students s
+LEFT JOIN departments d
+ON s.dept_id = d.dept_id;
+
+-- Right Join
+
+SELECT
+  s.student_id,
+  s.name,
+  d.dept_name
+FROM students s
+RIGHT JOIN departments d
+ON s.dept_id = d.dept_id;
+
+-- full outer join 
+
+SELECT
+  s.student_id,
+  s.name,
+  d.dept_name
+FROM students s
+FULL OUTER JOIN departments d
+ON s.dept_id = d.dept_id;
+
+-- cross join 
+
+SELECT s.name, d.dept_name
+FROM students s
+CROSS JOIN departments d;
+
+-- self join 
+
+-- SELECT
+--   e.emp_name AS Employee,
+--   m.emp_name AS Manager
+-- FROM employees e
+-- LEFT JOIN employees m
+-- ON e.manager_id = m.emp_id;
+
+-----------------------------------------------------------------------------------------------
+-- Practical 6 -- to aggregate data using group function
+
+
+SELECT COUNT(*) AS total_students
+FROM students;
+
+SELECT AVG(student_id) AS avg FROM students;
+
+SELECT dept_id, COUNT(*) AS students_count
+FROM students
+GROUP BY dept_id;
+
+SELECT dept_id, COUNT(*) AS students_count, AVG(student_id) AS st_is_avg
+FROM students
+GROUP BY dept_id
+ORDER BY dept_id;
+
+
+-- SELECT d.dept_name, COUNT(s.student_id) AS num_students
+-- FROM departments d
+-- LEFT JOIN students s ON d.dept_id = s.dept_id
+-- GROUP BY d.dept_name
+-- HAVING COUNT(s.student_id) > 1;
+
+SELECT COUNT(DISTINCT dept_id) AS distinct_departments FROM students;
+
+SELECT d.dept_name, COUNT(s.student_id) AS num_students
+FROM departments d
+LEFT JOIN students s ON d.dept_id = s.dept_id
+GROUP BY d.dept_name
+ORDER BY num_students DESC;
+
+SELECT max(student_id) as max_id
+FROM students;
+
+SELECT min(student_id) as min_id
+FROM students;
+
+SELECT sum(student_id) as id_sum
+FROM students;
+
+-----------------------------------------------------------------------------------------------
+-- Practical 7 -- to study the different types of subqueries
+
+-- e.g 
+-- SELECT column1, column2
+-- FROM table1
+-- WHERE column3 operator (SELECT columnX FROM table2 WHERE condition);
+
+SELECT name, student_id
+FROM students
+WHERE student_id = (SELECT MAX(student_id) FROM students);
+
+
+SELECT name, dept_id
+FROM students
+WHERE dept_id IN (SELECT dept_id
+                  FROM students
+                  GROUP BY dept_id
+                  HAVING COUNT(*) < 5);
+
+
+SELECT name, dept_id
+FROM students
+WHERE (dept_id, student_id) IN (
+    SELECT dept_id, MIN(student_id)
+    FROM students
+    GROUP BY dept_id
+    ORDER BY MIN(student_id)
+    LIMIT 1
+);
+
+
+SELECT s.name, s.student_id,
+       (SELECT AVG(s2.student_id)
+        FROM students s2
+        WHERE s2.dept_id = s.dept_id) AS dept_avg_cgpa
+FROM students s;
+
+-----------------------------------------------------------------------------------------------
+-- Practical 8 -- to study the different constraints in SQL
+
+CREATE TABLE new_students (
+    student_id INT PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50),
+    email VARCHAR(50) UNIQUE,
+    dept_id INT,
+    cgpa DECIMAL(3,2) CHECK(cgpa >= 0 AND cgpa <= 10),
+    admission_year INT DEFAULT 2025,
+    FOREIGN KEY (dept_id) REFERENCES departments(dept_id)
+);
+
+
+-- ALTER TABLE students
+-- ADD CONSTRAINT unique_email UNIQUE (email);
+
+
+ALTER TABLE students
+ADD CONSTRAINT check_id CHECK (student_id BETWEEN 0 AND 10);
+
+
+ALTER TABLE students
+ADD CONSTRAINT fk_dept FOREIGN KEY (dept_id) REFERENCES departments(dept_id);
+
+
+SELECT * FROM students;
+
+
+-------
+
+INSERT INTO students(student_id, name, dept_id) VALUES (101, 'Rushi', 1);
+INSERT INTO students(student_id, name, dept_id) VALUES (101, 'Yash', 2);
+--  Duplicate entry for PRIMARY KEY
+
+INSERT INTO students(student_id, name, dept_id, cgpa) VALUES (105, 'Vaishnav', 3, 11);
+-- CHECK constraint violated -- cgpa out of range
+
+
+INSERT INTO students(student_id, name, dept_id, email) VALUES (106, 'Shubham', 2, 'shubham@gmail.com');
+-- UNIQUE constraint violated -- Duplicate email
+
+INSERT INTO students(student_id, name, dept_id) VALUES (107, NULL, 1);
+-- NOT NULL constraint violated -- NULL first_name
+
+
+

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>New Prac</title>
+    </head>
+    <script>
+        const table = document.querySelector("#customers tbody");
+        table.innerHTML = "";
+        const fun1 = () => {
+            let row =  `
+            <tr>
+                    <td>
+                        21213
+                    </td>
+                    <td>
+                        Rushikesh
+                    </td>
+                    <td>
+                        HP 15S New
+                    </td>
+                    <td>
+                        333,000 Rs
+                    </td>   
+                </tr>
+            `;
+            table.innerHTML += row;
+        }
+    </script>
+    <body>
+        <table id="customers" border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse;" >
+            <thead>
+                <tr>
+                    <th>
+                        ID
+                    </th>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Laptop
+                    </th>
+                    <th>
+                        Price
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        1
+                    </td>
+                    <td>
+                        Rushi
+                    </td>
+                    <td>
+                        HP 15S
+                    </td>
+                    <td>
+                        33,000 Rs
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+        <button onclick="fun1()">Add Row</button>
+    </body>
+</html>
