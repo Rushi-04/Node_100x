@@ -14,7 +14,7 @@ const userAuth = async (req, res, next) => {
         }
         const decodedInfo = jwt.verify(token, JWT_USER_PASSWORD);
 
-        const userId = decodedInfo.id;
+        req.userId = decodedInfo.id;
         next();
     } catch (err) {
         res.status(403).json({

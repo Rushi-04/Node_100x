@@ -9,7 +9,7 @@ const adminAuth = async (req, res, next) => {
         if(!token)
         {
             res.status(401).json({
-                message: "Token Mising"
+                message: "Token Missing"
             });
         }
         const decodedInfo = jwt.verify(token, JWT_ADMIN_PASSWORD);

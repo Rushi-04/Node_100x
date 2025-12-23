@@ -37,8 +37,6 @@ app.use(cors({
     // origin: ,
     credentials: true
 }));
-
-
 const main = async () => {
 
     await mongoose.connect(CONNECTION_STRING);
@@ -48,3 +46,6 @@ const main = async () => {
 }
 
 main();
+
+
+
