@@ -170,25 +170,29 @@ app.get("/api/v1/content",authMiddleware, async (req, res) => {
 
 // delete Content
 app.delete("/api/v1/content",authMiddleware, async (req, res) => {
-    const contentId = req.body.contentId;
+    const {contentId} = req.body;
     if(!req.userId){
-        return res.status(401).json({message: "Unauthorized"})
+        return res.status(401).json({message: "Unauthorized"});
     }
     if(!contentId){
-        return res.status(401).json({message: "ContentId missing"})
+        return res.status(401).json({message: "ContentId missing"});
     }
 
     try{
-        await ContentModel.deleteMany({id: contentId, userId: req.userId});
+        const result = await ContentModel.deleteOne({_id: contentId, userId: req.userId});
+
+        if(result.deletedCount === 0){
+            return res.status(404).json({message: "Content not found"});
+        }
 
         res.status(200).json({
             message: "Content Deleted."
-        })
+        });
     }catch(e){
-        res.status(404).json({
-            message: "Content not found",
+        res.status(500).json({
+            message: "Error deleting content",
             error: (e as Error).message
-        })
+        });
     }
 });
 
@@ -198,6 +202,10 @@ app.post("/api/v1/brain/share", (req, res) => {
     
 });
 
+// Share a link
+app.post("/api/v1/brain/:shareLink", (req, res) => {
+    
+});
 
 
 // -----------------------------------------------------
