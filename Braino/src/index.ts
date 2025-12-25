@@ -29,8 +29,8 @@ import { authMiddleware } from "./middleware.js";
 
 config();
 
-const CONNECTION_STRING = process.env.CONNECTION_STRING as string
-const JWT_SECRET = process.env.JWT_SECRET as string;
+const CONNECTION_STRING = process.env.CONNECTION_STRING
+const JWT_SECRET = process.env.JWT_SECRET
 
 if(!CONNECTION_STRING){
     throw new Error("CONNECTION_STRING is not defined");
