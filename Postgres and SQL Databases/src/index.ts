@@ -69,7 +69,7 @@ app.get('/all', async(req, res) => {
             error: (e as Error).message
         });
     }
-});
+}); 
 
 const main = async () => {
 
