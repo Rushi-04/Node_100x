@@ -1,22 +1,30 @@
 import { Client } from "pg";
 import express from "express";
+import {config} from "dotenv";
+
+config();
+
+// ENV DATA
+const PG_CONNECTION_STRING = process.env.PG_CONNECTION_STRING as string;
+const USER = process.env.USER as string;
+const PASSWORD = process.env.PASSWORD as string;
+const PORT = process.env.PORT;
+const HOST = process.env.HOST as string;
+const DATABASE =process.env.DATABASE as string;
 
 const app = express();
 app.use(express.json());
 
-// connection string --> 
-// psql 'postgresql://neondb_owner:npg_n0xCuK4qEZTt@ep-curly-lake-a148bhxw-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require'
-
 // u p p h d 
 
-// const pgClient = new Client("postgresql://neondb_owner:npg_n0xCuK4qEZTt@ep-curly-lake-a148bhxw-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require")
+// const pgClient = new Client(PG_CONNECTION_STRING)
 
 const pgClient = new Client({
-    user: "neondb_owner",
-    password: "npg_n0xCuK4qEZTt",
+    user: USER,
+    password: PASSWORD,
     port: 5432,
-    host: "ep-curly-lake-a148bhxw-pooler.ap-southeast-1.aws.neon.tech",
-    database: "neondb",
+    host: HOST,
+    database: DATABASE,
     ssl: true
 });
 
@@ -43,7 +51,8 @@ app.post('/signup', async(req, res) => {
         const response = await pgClient.query(insertQuery, [username, email, password]);
 
         return res.status(201).json({
-            message: "User Added Successfully."
+            message: "User Added Successfully.",
+            response: response
         })
     }catch(e){
         return res.status(403).json({
@@ -60,7 +69,7 @@ app.get('/all', async(req, res) => {
         const response = await pgClient.query(selectQuery);
 
         return res.status(201).json({
-            message: "User goted.",
+            message: "I got user.",
             res: response.rows
         })
     }catch(e){
