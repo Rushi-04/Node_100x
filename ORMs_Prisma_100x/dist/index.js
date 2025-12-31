@@ -1,5 +1,3 @@
-console.log("Hello from Prisma folder eeeeeeeeeeee !");
-export {};
 /*
 
 List of commands :-
@@ -18,5 +16,20 @@ npm install prisma
 
 npx prisma init
 
-*/ 
+npx prisma migrate dev
+npx prisma generate
+
+*/
+import { prisma } from "./lib/prisma.js";
+async function createUser() {
+    await prisma.user.create({
+        data: {
+            username: "Rushi",
+            password: "python",
+            firstname: "Rushikesh",
+            lastname: "Borkar"
+        }
+    });
+}
+createUser();
 //# sourceMappingURL=index.js.map
