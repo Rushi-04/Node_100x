@@ -21,7 +21,7 @@ npx prisma generate
 
 */
 
-import { todo } from "node:test"
+import { get } from "node:http"
 import {prisma} from "./lib/prisma.js"
 
 async function createUser () {
@@ -36,5 +36,15 @@ async function createUser () {
     })
 }
 
+async function getUsers() {
 
+    const user = await prisma.user.findFirst({
+        where: {
+            id: 1
+        }
+    })
+
+    console.log(user)
+} 
+getUsers();
 // createUser();

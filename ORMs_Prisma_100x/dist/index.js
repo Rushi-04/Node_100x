@@ -20,6 +20,7 @@ npx prisma migrate dev
 npx prisma generate
 
 */
+import { get } from "node:http";
 import { prisma } from "./lib/prisma.js";
 async function createUser() {
     await prisma.user.create({
@@ -28,8 +29,17 @@ async function createUser() {
             password: "python",
             firstname: "Rushikesh",
             lastname: "Borkar"
-        }
+        },
     });
 }
-createUser();
+async function getUsers() {
+    const user = await prisma.user.findFirst({
+        where: {
+            id: 1
+        }
+    });
+    console.log(user);
+}
+getUsers();
+// createUser();
 //# sourceMappingURL=index.js.map
