@@ -11,6 +11,7 @@ function App() {
   type ChatMessage = {
     id: number;
     text: string;
+    type: "sent" | "received";
   };
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -21,6 +22,12 @@ function App() {
 
     const msg = inputRef.current.value;
     if(!msg) return;
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: Date.now(), text: msg, type: "sent"
+      }
+    ])
     socket.send(msg);
     inputRef.current.value = "";
   }
@@ -39,11 +46,13 @@ function App() {
     // new 
     ws.onmessage = (event) => {
       setMessages((prev) => [
+        ...prev,
         {
           id: Date.now(),
-          text: event.data
-        },
-        ...prev
+          text: event.data,
+          type: "received"
+        }
+        
       ])
     }
 
@@ -87,10 +96,12 @@ function App() {
           {messages.map((msg) => (
             <div
               key={msg.id}
-              className="
-                  bg-emerald-400 text-white px-4 py-2 rounded-lg
-                  animate-messageIn
-                "
+              className={`
+                   text-white px-4 py-2 rounded-lg animate-messageIn max-w-[75%]
+                  ${msg.type === "sent" ? 
+                    "bg-emerald-500 text-white ml-auto text-right" : 
+                    "bg-teal-700 text-black mr-auto text-left"}
+              `}
             >
               {msg.text}
             </div>
