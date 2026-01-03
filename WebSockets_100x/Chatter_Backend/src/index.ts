@@ -86,7 +86,7 @@ interface User {
 }
 
 // 
-let allSockets: User[] = [];
+let allUsers: User[] = [];
 
 // on connection
 wss.on("connection", (socket) => {
@@ -97,10 +97,12 @@ wss.on("connection", (socket) => {
         console.log("parsed")
         const parsedMessage = JSON.parse(message as unknown as string);
         
-        console.log("parsedMessage: ", parsedMessage)
+        // debugging
+        // console.log("parsedMessage: ", parsedMessage)
+
         // If wants to join 
         if(parsedMessage.type == "join"){
-            allSockets.push({
+            allUsers.push({
                 socket: socket,
                 room: parsedMessage.payload.roomId
             });
@@ -108,11 +110,11 @@ wss.on("connection", (socket) => {
         
         // If wants to chat
         if(parsedMessage.type == "chat"){
-            const currentUserRoom = allSockets.find((x) => x.socket == socket)?.room
+            const currentUserRoom = allUsers.find((x) => x.socket == socket)?.room
 
-            allSockets.forEach((storedSocket) => {
-                if(storedSocket.room == currentUserRoom){
-                    storedSocket.socket.send(parsedMessage.payload.message);
+            allUsers.forEach((user) => {
+                if(user.room == currentUserRoom){
+                    user.socket.send(parsedMessage.payload.message);
                 }
             });
         }
@@ -120,6 +122,6 @@ wss.on("connection", (socket) => {
     });
 
     socket.on("close", () => {
-        allSockets = allSockets.filter((x) => x.socket != socket);
+        allUsers = allUsers.filter((x) => x.socket != socket); // sirf ye wala mat rakho baki sab rakho.
     })
 });
