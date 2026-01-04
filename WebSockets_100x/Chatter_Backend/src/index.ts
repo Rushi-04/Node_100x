@@ -53,7 +53,7 @@
 //     })
 // });
 
-// -------------- Room Based : Chat application ------------
+// -------------- Room Based : Chat application  (Non Scalable)------------
 
 /*
 
@@ -75,53 +75,105 @@ Chat Schema
 
 */
 
+// import { WebSocketServer, WebSocket } from "ws";
+
+// // websocket server
+// const wss = new WebSocketServer({port: 8080});
+
+// interface User {
+//     socket: WebSocket,
+//     room: string
+// }
+
+// // 
+// let allUsers: User[] = [];
+
+// // on connection
+// wss.on("connection", (socket) => {
+    
+//     // on message
+//     socket.on("message", (message) => {
+//         // convert message as string to json
+//         console.log("parsed")
+//         const parsedMessage = JSON.parse(message as unknown as string);
+        
+//         // debugging
+//         // console.log("parsedMessage: ", parsedMessage)
+
+//         // If wants to join 
+//         if(parsedMessage.type == "join"){
+//             allUsers.push({
+//                 socket: socket,
+//                 room: parsedMessage.payload.roomId
+//             });
+//         }
+        
+//         // If wants to chat
+//         if(parsedMessage.type == "chat"){
+//             const currentUserRoom = allUsers.find((x) => x.socket == socket)?.room
+
+//             allUsers.forEach((user) => {
+//                 if(user.room == currentUserRoom){
+//                     user.socket.send(parsedMessage.payload.message);
+//                 }
+//             });
+//         }
+
+//     });
+
+//     socket.on("close", () => {
+//         allUsers = allUsers.filter((x) => x.socket != socket); // sirf ye wala mat rakho baki sab rakho.
+//     })
+// });
+
+
+// ===================== Coding it again, Room Based : Chat application (Scalable) =========================
+
+
+
 import { WebSocketServer, WebSocket } from "ws";
 
-// websocket server
 const wss = new WebSocketServer({port: 8080});
 
-interface User {
+interface Room {
     socket: WebSocket,
-    room: string
-}
+    roomId: string
+};
 
-// 
-let allUsers: User[] = [];
+let rooms: Room[] = [];
 
-// on connection
 wss.on("connection", (socket) => {
-    
-    // on message
-    socket.on("message", (message) => {
-        // convert message as string to json
-        console.log("parsed")
-        const parsedMessage = JSON.parse(message as unknown as string);
-        
-        // debugging
-        // console.log("parsedMessage: ", parsedMessage)
 
-        // If wants to join 
-        if(parsedMessage.type == "join"){
-            allUsers.push({
+    socket.on("message", (msg) => {
+
+        const parsedMsg = JSON.parse(msg as unknown as string);
+
+        if(parsedMsg.type == "join"){
+            rooms.push({
                 socket: socket,
-                room: parsedMessage.payload.roomId
+                roomId: parsedMsg.payload.roomId
             });
         }
-        
-        // If wants to chat
-        if(parsedMessage.type == "chat"){
-            const currentUserRoom = allUsers.find((x) => x.socket == socket)?.room
 
-            allUsers.forEach((user) => {
-                if(user.room == currentUserRoom){
-                    user.socket.send(parsedMessage.payload.message);
+        if(parsedMsg.type == "chat"){
+            const currentUserRoomId = rooms.find((room) => room.socket == socket)?.roomId;
+
+            rooms.forEach((room) => {
+                if(room.roomId == currentUserRoomId){
+                    room.socket.send(parsedMsg.payload.message);
                 }
-            });
-        }
+            })
+        };
+    });
 
+    socket.on("error", () => {
+        console.error("Error Ocurred.");
     });
 
     socket.on("close", () => {
-        allUsers = allUsers.filter((x) => x.socket != socket); // sirf ye wala mat rakho baki sab rakho.
-    })
+        rooms = rooms.filter((room) => room.socket != socket);
+    });
+    
 });
+
+
