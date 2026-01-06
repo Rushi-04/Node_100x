@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "LockedIn",
-  description: "All you need is LockedIn not LinkedIn",
+  description: "Just LockedIn not LinkedIn",
 };
 
 export default function RootLayout({
